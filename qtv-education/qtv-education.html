@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Q TV Education | The Watchdog of the Education System</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Clash Display', 'sans-serif'],
+                    },
+                    colors: {
+                        qtvDarkBlue: '#00008B',
+                        qtvNavy: '#050b14',
+                        qtvRed: '#d91e27',
+                        qtvLight: '#ffffff',
+                        qtvGray: '#f8fafc',
+                        darkSurface: '#0a1128',
+                    },
+                    animation: {
+                        'ticker': 'ticker 30s linear infinite',
+                        'spin-slow': 'spin 10s linear infinite',
+                        'spin-reverse': 'spinReverse 15s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite alternate',
+                        'data-flow': 'dataFlow 2s linear infinite',
+                    },
+                    keyframes: {
+                        ticker: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        spinReverse: {
+                            '0%': { transform: 'rotate(360deg)' },
+                            '100%': { transform: 'rotate(0deg)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        pulseGlow: {
+                            '0%': { opacity: 0.6, filter: 'drop-shadow(0 0 15px rgba(217,30,39,0.3))' },
+                            '100%': { opacity: 1, filter: 'drop-shadow(0 0 30px rgba(217,30,39,0.8))' },
+                        },
+                        dataFlow: {
+                            'to': { strokeDashoffset: -200 },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            overflow-x: hidden; 
+            transition: background-color 0.4s ease, color 0.4s ease;
+            background-color: #f8fafc;
+            color: #050b14;
+        }
+        .dark body { background-color: #050b14; color: #ffffff; }
+        
+        /* Ultra-Premium Glass Nav */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+        .dark .glass-nav {
+            background: rgba(5, 11, 20, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 3D Canvas & Backgrounds */
+        #hero-canvas { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+        
+        /* Hardware Accelerated 3D Tilt Cards */
+        .perspective-container { perspective: 1500px; }
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .tilt-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.6) 25%, transparent 30%);
+            opacity: 0; transition: opacity 0.3s ease, transform 0.1s ease-out;
+            pointer-events: none; z-index: 10;
+        }
+        .tilt-card:hover::after { opacity: 1; }
+        .dark .tilt-card::after { background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.15) 25%, transparent 30%); }
+
+        /* Ticker Mask */
+        .ticker-mask {
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .text-gradient-brand {
+            background: linear-gradient(135deg, #00008B 0%, #d91e27 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .dark .text-gradient-brand {
+            background: linear-gradient(135deg, #ffffff 0%, #d91e27 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .premium-input {
+            width: 100%; padding: 1.2rem 1.5rem;
+            background: rgba(255,255,255,0.5); border: 1px solid rgba(0,0,139,0.1);
+            border-radius: 12px; transition: all 0.3s ease; outline: none;
+        }
+        .dark .premium-input { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: white; }
+        .premium-input:focus { border-color: #d91e27; box-shadow: 0 0 0 4px rgba(217,30,39,0.1); }
+
+        /* --- 3D ANIMATED VISUALS CSS (NO IMAGES) --- */
+        
+        /* Background Replacements */
+        .css-bg-grid {
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .css-bg-radial {
+            background: radial-gradient(circle at center, rgba(0,0,139,0.2) 0%, transparent 70%);
+        }
+
+        /* 1. Watchdog Eye / Rings */
+        .watchdog-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px dashed rgba(217,30,39,0.4); }
+        .watchdog-ring:nth-child(1) { transform: rotateX(60deg) rotateY(0deg); animation: spin-slow 8s linear infinite; }
+        .watchdog-ring:nth-child(2) { transform: rotateX(60deg) rotateY(60deg); animation: spin-slow 12s linear infinite reverse; }
+        .watchdog-ring:nth-child(3) { transform: rotateX(60deg) rotateY(120deg); animation: spin-slow 10s linear infinite; }
+        
+        /* 2. Holographic Document (SVG Drawing) */
+        .path-draw { stroke-dasharray: 400; stroke-dashoffset: 400; }
+
+        /* 3. Exam Matrix Grid */
+        .exam-node { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: all 0.5s; }
+        .exam-node.active { background: #38bdf8; box-shadow: 0 0 15px #38bdf8; transform: scale(1.5); }
+
+        /* 4. Financial Audit 3D Bars */
+        .audit-bar { 
+            width: 40px; background: linear-gradient(to top, rgba(0,0,139,0.8), rgba(217,30,39,0.8));
+            transform-origin: bottom; border-top: 2px solid #fff;
+            animation: bar-rise 3s cubic-bezier(0.2, 0.8, 0.2, 1) infinite alternate;
+        }
+        .ab-1 { animation-delay: 0.1s; } .ab-2 { animation-delay: 0.5s; } .ab-3 { animation-delay: 0.3s; }
+        @keyframes bar-rise { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
+
+        /* 5. Career Tech Pipeline */
+        .pipeline-flow { stroke-dasharray: 20 20; animation: dataFlow 1.5s linear infinite; }
+    </style>
+</head>
+<body class="antialiased selection:bg-qtvRed selection:text-white">
+
+    <!-- NAVIGATION (Untouched) -->
+    <nav class="fixed w-full z-50 glass-nav px-6 py-4">
+        <div class="max-w-[90rem] mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center tracking-tighter ">
+                
+            <img src="../assets/education.png" alt="QTV Logo" class="w-20 h-20 object-contain ">
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 font-semibold text-sm">
+                <a href="#philosophy" class="hover:text-qtvRed transition-colors">Our Mission</a>
+                <a href="#sectors" class="hover:text-qtvRed transition-colors">News Desks</a>
+                <a href="#dispatch" class="hover:text-qtvRed transition-colors">Tip Line</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="p-2.5 rounded-full bg-gray-200 dark:bg-darkSurface text-gray-800 dark:text-yellow-400 hover:scale-110 transition-transform shadow-md border border-transparent dark:border-white/10">
+                    <svg id="theme-icon-dark" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="theme-icon-light" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+                <a href="#dispatch" class="bg-qtvRed text-white px-7 py-2.5 rounded-full text-sm font-bold shadow-[0_0_15px_rgba(217,30,39,0.3)] hover:shadow-[0_0_25px_rgba(217,30,39,0.5)] hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> Send Intel
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION (Untouched except removing Unsplash bg) -->
+    <section class="relative h-[95vh] w-full flex items-center justify-center overflow-hidden transition-colors duration-500 bg-white dark:bg-qtvNavy">
+        <div class="absolute inset-0 css-bg-radial opacity-50 z-0"></div>
+        <div id="hero-canvas"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-white/95 via-white/80 to-transparent dark:from-qtvNavy/95 dark:via-qtvNavy/80 dark:to-transparent z-10 pointer-events-none transition-colors duration-500"></div>
+
+        <div class="relative z-20 w-full px-6 flex flex-col items-center justify-center text-center mt-10">
+            <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-qtvDarkBlue/20 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-md mb-8 gsap-hero opacity-0 translate-y-8 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-qtvRed animate-pulse"></span>
+                <span class="text-xs font-bold tracking-widest uppercase text-qtvDarkBlue dark:text-white">The Educational News Authority</span>
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl lg:text-[7rem] font-display font-bold tracking-tight leading-[0.95] mb-6 gsap-hero opacity-0 translate-y-8 text-qtvNavy dark:text-white max-w-5xl mx-auto drop-shadow-lg">
+                The Watchdog of <br>
+                <span class="text-gradient-brand">The System.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 font-medium max-w-3xl mx-auto mb-10 gsap-hero opacity-0 translate-y-8">
+                We don't teach; we inform. We are the dedicated journalistic engine tracking exam updates, exposing systemic flaws, and analyzing the policies shaping the future of students in Andhra Pradesh and Telangana.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-5 justify-center gsap-hero opacity-0 translate-y-8">
+                <a href="#sectors" class="bg-qtvDarkBlue text-white px-10 py-4 rounded-full font-bold hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(0,0,139,0.4)]">
+                    Explore News Desks
+                </a>
+                <a href="#dispatch" class="border border-gray-400 dark:border-white/20 text-qtvNavy dark:text-white px-10 py-4 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-300 flex items-center justify-center gap-2">
+                    <i class="fas fa-user-secret text-qtvRed"></i> Whistleblower Tip Line
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ALERTS TICKER (Untouched) -->
+    <section class="relative z-30 -mt-8 max-w-[90rem] mx-auto px-6">
+        <div class="bg-white/80 dark:bg-darkSurface/80 backdrop-blur-2xl rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl flex items-center p-1.5 overflow-hidden">
+            <div class="bg-qtvRed text-white font-bold uppercase tracking-widest text-xs px-6 py-4 rounded-xl flex-shrink-0 z-10 flex items-center gap-2 shadow-lg">
+                <i class="fas fa-bell"></i> Alerts
+            </div>
+            <div class="flex-grow overflow-hidden ticker-mask ml-4">
+                <div class="whitespace-nowrap animate-ticker inline-block text-sm font-bold text-qtvDarkBlue dark:text-gray-200">
+                    <span class="mx-8">• <span class="text-qtvRed">AP EAPCET:</span> Key updates on counseling delays</span>
+                    <span class="mx-8">• State Government announces overhaul of Engineering curriculum</span>
+                    <span class="mx-8">• <span class="text-qtvRed">Investigation:</span> Irregularities found in private university fee structures</span>
+                    <span class="mx-8">• <span class="text-qtvRed">AP EAPCET:</span> Key updates on counseling delays</span>
+                    <span class="mx-8">• State Government announces overhaul of Engineering curriculum</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- REBUILT EDUCATION SECTORS (Animated CSS/SVG) -->
+    <!-- ========================================== -->
+    <div id="sectors" class="relative bg-white dark:bg-qtvNavy transition-colors duration-500 border-y border-gray-200 dark:border-white/5 pt-20">
+        
+        <!-- SECTOR 1: Our Mission / The Watchdog (Replaces static Philosophy image) -->
+        <section id="philosophy" class="min-h-screen flex items-center py-20 px-6 relative overflow-hidden">
+            <div class="max-w-[90rem] mx-auto grid md:grid-cols-2 gap-16 items-center w-full">
+                <!-- Abstract 3D Watchdog Visual -->
+                <div class="perspective-container gsap-fade-up">
+                    <div class="tilt-card relative h-[450px] rounded-[2.5rem] bg-qtvGray dark:bg-darkSurface shadow-2xl border border-gray-200 dark:border-white/10 overflow-hidden flex justify-center items-center">
+                        <div class="absolute inset-0 bg-gradient-to-t from-qtvNavy/10 to-transparent dark:from-qtvNavy/50"></div>
+                        <!-- CSS 3D Radar/Eye -->
+                        <div class="w-64 h-64 relative transform-style-3d rotate-x-60 animate-float">
+                            <div class="watchdog-ring"></div>
+                            <div class="watchdog-ring"></div>
+                            <div class="watchdog-ring"></div>
+                            <div class="absolute inset-1/4 bg-qtvRed/20 rounded-full blur-xl animate-pulse-glow"></div>
+                            <div class="absolute inset-1/3 bg-qtvRed rounded-full shadow-[0_0_40px_#d91e27] flex items-center justify-center">
+                                <i class="fas fa-eye text-3xl text-white"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-8 left-8 transform translate-z-20">
+                            <span class="bg-qtvRed text-white px-3 py-1 rounded text-[10px] font-bold uppercase mb-2 inline-block border border-white/20">The Network Eye</span>
+                            <h3 class="text-2xl font-display font-bold text-qtvNavy dark:text-white">Unbiased Verification</h3>
+                            <p class="text-gray-500 text-sm max-w-xs mt-1">Cross-referencing GOs and exam data instantly.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gsap-sector-text">
+                    <h2 class="text-sm font-bold text-qtvRed tracking-widest uppercase mb-4">Our Mission</h2>
+                    <h3 class="text-4xl md:text-5xl font-display font-bold leading-tight mb-6 text-qtvNavy dark:text-white">Why Students <span class="text-qtvDarkBlue dark:text-qtvCyan">Trust Us.</span></h3>
+                    <p class="text-gray-700 dark:text-gray-400 text-lg mb-6 leading-relaxed font-medium">
+                        Mainstream news treats the education sector as a footnote, only covering it during result days or scandals. Q TV Education News was engineered to change that paradigm.
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-400 text-lg mb-8 leading-relaxed font-medium">
+                        We strive to hold the education system accountable. From analyzing government policies before they are passed, to exposing paper leaks, to providing clarity on complex entrance exams, we act as the definitive shield and voice for the student body.
+                    </p>
+                    <div class="space-y-4 mt-8">
+                        <div class="flex items-center gap-4 bg-qtvGray dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                            <i class="fas fa-check-circle text-qtvRed text-xl"></i>
+                            <p class="text-sm font-bold text-qtvNavy dark:text-white">100% Fact-Checked Government Orders (G.O.)</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-qtvGray dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                            <i class="fas fa-check-circle text-qtvRed text-xl"></i>
+                            <p class="text-sm font-bold text-qtvNavy dark:text-white">Zero Political Affiliation or Bias</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTOR 2: Policy & Governance (Holographic Document) -->
+        <section class="min-h-screen flex items-center py-20 px-6 relative overflow-hidden bg-gray-50 dark:bg-[#080d1a]">
+            <div class="max-w-[90rem] mx-auto grid lg:grid-cols-2 gap-16 items-center w-full">
+                <div class="order-2 lg:order-1 relative h-[450px] bg-qtvNavy rounded-[2.5rem] border border-qtvDarkBlue/50 shadow-[0_0_50px_rgba(0,0,139,0.15)] overflow-hidden flex justify-center items-center gsap-sector-visual perspective-container">
+                    <div class="absolute top-6 left-6 text-xs font-bold uppercase tracking-widest text-qtvCyan z-20">Policy Decoder Scanner</div>
+                    <!-- SVG Animated Document -->
+                    <div class="w-64 h-80 relative transform rotateX-10 rotateY-10 shadow-2xl">
+                        <div class="absolute inset-0 bg-darkSurface border border-qtvCyan/30 rounded-xl"></div>
+                        <svg viewBox="0 0 100 120" class="absolute inset-0 w-full h-full p-6">
+                            <!-- Page Outline -->
+                            <rect x="5" y="5" width="90" height="110" rx="2" fill="none" stroke="#38bdf8" stroke-width="1" class="svg-anim path-draw"/>
+                            <!-- Text Lines -->
+                            <line x1="15" y1="20" x2="60" y2="20" stroke="#ffffff" stroke-width="2" stroke-linecap="round" class="svg-anim path-draw" style="animation-delay: 0.2s;"/>
+                            <line x1="15" y1="35" x2="85" y2="35" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" class="svg-anim path-draw" style="animation-delay: 0.4s;"/>
+                            <line x1="15" y1="45" x2="75" y2="45" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" class="svg-anim path-draw" style="animation-delay: 0.6s;"/>
+                            <line x1="15" y1="55" x2="80" y2="55" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" class="svg-anim path-draw" style="animation-delay: 0.8s;"/>
+                            <!-- Stamp -->
+                            <circle cx="70" cy="90" r="10" fill="none" stroke="#d91e27" stroke-width="1.5" class="svg-anim path-draw" style="animation-delay: 1s;"/>
+                            <text x="70" y="93" fill="#d91e27" font-size="6" font-family="sans-serif" text-anchor="middle" font-weight="bold">GOVT</text>
+                        </svg>
+                        <!-- Scanner Line -->
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-qtvCyan/80 shadow-[0_0_15px_#38bdf8] animate-[bar-rise_3s_linear_infinite_alternate]" style="transform-origin: top;"></div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 gsap-sector-text">
+                    <div class="w-14 h-14 bg-qtvDarkBlue/10 text-qtvDarkBlue dark:text-qtvCyan rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-file-signature"></i></div>
+                    <h3 class="text-4xl md:text-5xl font-display font-bold text-qtvNavy dark:text-white mb-6">Policy & Governance</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-6">
+                        Tracking university syllabus updates, administrative changes, and infrastructure developments across JNTU, AU, OU, and all major state institutions.
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                        We decipher complex Government Orders (G.O.) into plain terminology, ensuring students and parents understand exactly how state decisions affect their academic trajectory.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTOR 3: Board & Entrance Exams (Data Matrix) -->
+        <section class="min-h-screen flex items-center py-20 px-6 relative overflow-hidden">
+            <div class="max-w-[90rem] mx-auto grid lg:grid-cols-2 gap-16 items-center w-full">
+                <div class="gsap-sector-text">
+                    <div class="w-14 h-14 bg-purple-500/10 text-purple-500 rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-laptop-code"></i></div>
+                    <h3 class="text-4xl md:text-5xl font-display font-bold text-qtvNavy dark:text-white mb-6">Board & Entrance Exams</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-6">
+                        The fastest, most reliable updates on AP/TS Board Exams, EAPCET, JEE, NEET, and ICET. 
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                        From instant hall ticket release notifications to deeply analytical result breakdowns and cut-off predictions, we guide students through the high-pressure admission phase.
+                    </p>
+                </div>
+                <div class="relative h-[450px] bg-qtvGray dark:bg-darkSurface rounded-[2.5rem] border border-gray-200 dark:border-white/10 shadow-xl overflow-hidden flex flex-col justify-center items-center gsap-sector-visual">
+                    <div class="absolute top-6 right-6 text-xs font-bold uppercase tracking-widest text-purple-500 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">Data Grid Processing</div>
+                    <!-- Exam Grid Animation -->
+                    <div class="grid grid-cols-6 gap-3 p-8" id="exam-matrix">
+                        <!-- JS will populate dots here to blink randomly -->
+                    </div>
+                    <div class="w-full bg-navy/5 px-8 pb-8 pt-4">
+                        <div class="flex justify-between text-[10px] text-gray-500 font-bold uppercase mb-2"><span>Evaluating Ranks</span><span>99%</span></div>
+                        <div class="w-full h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 w-[99%] shadow-[0_0_10px_#a855f7]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTOR 4: Institutional Audits (3D Chart) -->
+        <section class="min-h-screen flex items-center py-20 px-6 relative overflow-hidden bg-gray-50 dark:bg-[#080d1a]">
+            <div class="max-w-[90rem] mx-auto grid lg:grid-cols-2 gap-16 items-center w-full">
+                <div class="order-2 lg:order-1 relative h-[450px] bg-qtvNavy rounded-[2.5rem] border border-qtvRed/30 shadow-[0_0_40px_rgba(217,30,39,0.1)] overflow-hidden flex justify-center items-center gsap-sector-visual perspective-container">
+                    <div class="absolute top-6 left-6 text-xs font-bold uppercase tracking-widest text-qtvRed z-20"><i class="fas fa-exclamation-triangle"></i> Fee Extortion Detected</div>
+                    <!-- 3D Bar Chart Animation -->
+                    <div class="flex items-end justify-center gap-6 h-48 transform rotateX-20 rotateY-10 mt-10">
+                        <div class="audit-bar ab-1 h-[60%]"></div>
+                        <div class="audit-bar ab-2 h-[100%] shadow-[0_0_30px_#d91e27]"></div>
+                        <div class="audit-bar ab-3 h-[40%]"></div>
+                        <div class="audit-bar ab-1 h-[75%]"></div>
+                    </div>
+                    <div class="absolute bottom-10 text-center w-full">
+                        <p class="text-white text-sm font-mono bg-black/50 inline-block px-4 py-1 border border-white/20 rounded">Discrepancy: +450% over GO Limits</p>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 gsap-sector-text">
+                    <div class="w-14 h-14 bg-qtvRed/10 text-qtvRed rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-search-dollar"></i></div>
+                    <h3 class="text-4xl md:text-5xl font-display font-bold text-qtvNavy dark:text-white mb-6">Institutional Audits</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-6">
+                        Exposing the business of education. Our investigative wing relentlessly tracks illegal fee structures and donation extortions in private universities and corporate colleges.
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                        We run comparative analyses on infrastructure promises versus reality, holding institutional boards accountable to government fee regulations.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTOR 5: Career Intelligence (Tech Pipeline) -->
+        <section class="min-h-screen flex items-center py-20 px-6 relative overflow-hidden">
+            <div class="max-w-[90rem] mx-auto grid lg:grid-cols-2 gap-16 items-center w-full">
+                <div class="gsap-sector-text">
+                    <div class="w-14 h-14 bg-orange-500/10 text-orange-500 rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fas fa-briefcase"></i></div>
+                    <h3 class="text-4xl md:text-5xl font-display font-bold text-qtvNavy dark:text-white mb-6">Career Intelligence</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-6">
+                        Beyond the degree. We analyze placement trends, mass tech hiring shifts, and the hard reality of the IT job market for fresh graduates.
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                        Our intelligence reports guide students on emerging skills like AI, Cloud Computing, and Full-Stack development, mapping the direct pipeline from campus to corporate.
+                    </p>
+                </div>
+                <div class="relative h-[450px] bg-qtvGray dark:bg-darkSurface rounded-[2.5rem] border border-gray-200 dark:border-white/10 shadow-xl overflow-hidden flex justify-center items-center gsap-sector-visual">
+                    <div class="absolute inset-0 css-bg-grid opacity-30"></div>
+                    <!-- SVG Pipeline -->
+                    <svg viewBox="0 0 400 300" class="w-full h-full relative z-10 p-8">
+                        <circle cx="50" cy="150" r="20" fill="#0a1128" stroke="#f97316" stroke-width="3"/>
+                        <circle cx="350" cy="80" r="25" fill="#0a1128" stroke="#38bdf8" stroke-width="3"/>
+                        <circle cx="350" cy="220" r="25" fill="#0a1128" stroke="#10b981" stroke-width="3"/>
+                        
+                        <path d="M 70 150 C 150 150, 200 80, 325 80" fill="none" stroke="#f97316" stroke-width="4" opacity="0.3"/>
+                        <path d="M 70 150 C 150 150, 200 80, 325 80" fill="none" stroke="#f97316" stroke-width="4" class="pipeline-flow svg-anim"/>
+                        
+                        <path d="M 70 150 C 150 150, 200 220, 325 220" fill="none" stroke="#f97316" stroke-width="4" opacity="0.3"/>
+                        <path d="M 70 150 C 150 150, 200 220, 325 220" fill="none" stroke="#f97316" stroke-width="4" class="pipeline-flow svg-anim" style="animation-delay: 0.5s"/>
+                        
+                        <text x="50" y="155" text-anchor="middle" fill="#f97316" font-family="FontAwesome" font-size="16">&#xf19d;</text>
+                        <text x="350" y="85" text-anchor="middle" fill="#38bdf8" font-family="FontAwesome" font-size="16">&#xf108;</text>
+                        <text x="350" y="225" text-anchor="middle" fill="#10b981" font-family="FontAwesome" font-size="16">&#xf2db;</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- IMPACT STATS (Kept structure, replaced background with CSS) -->
+    <section id="stats" class="py-24 relative overflow-hidden group bg-qtvNavy border-y border-white/5">
+        <!-- Replaced Unsplash Image with CSS Grid/Gradient to keep it clean and performant -->
+        <div class="absolute inset-0 w-full h-full z-0 css-bg-grid opacity-20 group-hover:scale-105 transition-transform duration-1000"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-qtvNavy via-qtvDarkBlue/20 to-qtvNavy z-0"></div>
+
+        <div class="max-w-[90rem] mx-auto px-6 relative z-10">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4 text-white">The Architecture of Trust</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto font-medium">Operating on a strict doctrine of public transparency and rigorous fact-checking protocols.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/20">
+                <div class="gsap-stat">
+                    <h4 class="text-5xl md:text-7xl font-display font-bold mb-2 text-white">163<span class="text-qtvCyan">K</span></h4>
+                    <p class="text-blue-200 font-bold uppercase tracking-widest text-xs">Subscribers</p>
+                </div>
+                <div class="gsap-stat">
+                    <h4 class="text-5xl md:text-7xl font-display font-bold mb-2 text-white">3.3<span class="text-qtvCyan">K</span></h4>
+                    <p class="text-blue-200 font-bold uppercase tracking-widest text-xs">Videos Published</p>
+                </div>
+                <div class="gsap-stat">
+                    <h4 class="text-5xl md:text-7xl font-display font-bold mb-2 text-white">26<span class="text-qtvCyan"></span></h4>
+                    <p class="text-blue-200 font-bold uppercase tracking-widest text-xs">Districts Covered</p>
+                </div>
+                <div class="gsap-stat">
+                    <h4 class="text-5xl md:text-7xl font-display font-bold mb-2 text-white">99<span class="text-qtvCyan">%</span></h4>
+                    <p class="text-blue-200 font-bold uppercase tracking-widest text-xs">Verification Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECURE DISPATCH TIP LINE (Kept structure, replaced background with CSS) -->
+    <section id="dispatch" class="py-32 px-6 relative overflow-hidden flex items-center justify-center border-b border-gray-200 dark:border-white/10">
+        <!-- Replaced Unsplash Image with abstract CSS background -->
+        <div class="absolute inset-0 w-full h-full z-0 bg-qtvGray dark:bg-darkSurface">
+            <div class="absolute inset-0 opacity-10 dark:opacity-5" style="background-image: repeating-linear-gradient(45deg, #d91e27 0, #d91e27 1px, transparent 1px, transparent 40px);"></div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl w-full text-center gsap-fade-up">
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-qtvRed/30 bg-qtvRed/10 mb-6">
+                <i class="fas fa-user-secret text-qtvRed"></i>
+                <span class="text-qtvRed font-bold text-xs tracking-widest uppercase">Encrypted News Desk</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-display font-bold mb-6 text-qtvNavy dark:text-white">The Whistleblower <span class="text-qtvRed">Tip Line.</span></h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-10 font-medium max-w-2xl mx-auto">
+                Have verified intelligence regarding paper leaks, fee extortion, or administrative corruption? Send your intel directly to our editorial team via our encrypted WhatsApp pipeline. Your anonymity is guaranteed.
+            </p>
+            
+            <div class="perspective-container max-w-2xl mx-auto text-left">
+                <div class="tilt-card bg-white dark:bg-qtvNavy p-8 md:p-10 rounded-[2rem] shadow-2xl border border-gray-200 dark:border-white/10">
+                    <form onsubmit="sendToWhatsApp(event)" class="space-y-5 relative z-10">
+                        <div class="grid md:grid-cols-2 gap-5">
+                            <input type="text" id="waName" placeholder="Alias / Name (Optional)" class="premium-input text-qtvNavy dark:text-white placeholder-gray-500">
+                            <input type="text" id="waInstitution" placeholder="Institution / District" required class="premium-input text-qtvNavy dark:text-white placeholder-gray-500">
+                        </div>
+                        
+                        <div class="relative">
+                            <select id="waIssue" required class="premium-input text-qtvNavy dark:text-white appearance-none cursor-pointer">
+                                <option value="" disabled selected class="text-gray-500">Select Nature of Tip</option>
+                                <option value="Exam Paper Leak / Fraud" class="text-qtvNavy dark:text-white bg-white dark:bg-darkSurface">Exam Paper Leak / Fraud</option>
+                                <option value="Illegal Fee Extortion" class="text-qtvNavy dark:text-white bg-white dark:bg-darkSurface">Illegal Fee Extortion</option>
+                                <option value="Policy Violation" class="text-qtvNavy dark:text-white bg-white dark:bg-darkSurface">Policy Violation</option>
+                                <option value="General News Tip" class="text-qtvNavy dark:text-white bg-white dark:bg-darkSurface">General News Tip</option>
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                        </div>
+
+                        <textarea id="waMessage" rows="4" placeholder="Describe the situation or paste intel here..." required class="premium-input text-qtvNavy dark:text-white placeholder-gray-500 resize-none"></textarea>
+                        
+                        <button type="submit" class="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-4 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-3 text-lg">
+                            Dispatch Securely <i class="fab fa-whatsapp text-2xl"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (Untouched) -->
+    <footer class="bg-qtvGray dark:bg-qtvNavy text-qtvNavy dark:text-white pt-24 pb-10 px-6 transition-colors duration-500 border-t border-gray-200 dark:border-white/5">
+        <div class="max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 border-b border-gray-300 dark:border-white/10 pb-16">
+            <div class="md:col-span-2">
+                <div class="flex items-center tracking-tighter mb-6 gap-3">
+                  
+            <img src="../assets/education.png" alt="QTV Logo" class="w-20 h-26 object-contain animate-pulse">
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 max-w-sm mb-6 leading-relaxed font-medium">
+                    The premier educational journalism network for Andhra Pradesh and Telangana. Delivering absolute truth without political bias.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center border border-gray-200 dark:border-white/10 hover:bg-qtvRed hover:text-white transition-colors shadow-sm"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center border border-gray-200 dark:border-white/10 hover:bg-qtvRed hover:text-white transition-colors shadow-sm"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center border border-gray-200 dark:border-white/10 hover:bg-[#00008B] hover:text-white transition-colors shadow-sm"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-display font-bold text-lg mb-6">News Desks</h4>
+                <ul class="space-y-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    <li><a href="#" class="hover:text-qtvRed transition">Policy & Governance</a></li>
+                    <li><a href="#" class="hover:text-qtvRed transition">Board & Entrance Exams</a></li>
+                    <li><a href="#" class="hover:text-qtvRed transition">Career Intelligence</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-display font-bold text-lg mb-6">Network Links</h4>
+                <ul class="space-y-4 text-gray-600 dark:text-gray-400 text-sm">
+                    <li><a href="../index.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">Main Hub</a></li>
+                    <li><a href="./qtv-media/qtv-media.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">QTV MEDIA</a></li>
+                    <li><a href="../qtv-bhakti/qtv-bhakti.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">QTV Bhakti</a></li>
+                    <li><a href="./qtv-education.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">Q TV Education</a></li>
+                    <li><a href="../qtv-health/qtv-health.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">Q TV Health</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-[90rem] mx-auto text-center text-xs text-gray-500 font-bold">
+            <p>&copy; 2026 Q TV Education News. ZIGZEX IT SERVICES PRIVATE LIMITED. <span style="color: #050b14;">By Indra</span></p>
+        </div>
+    </footer>
+
+    <!-- INTERACTION LOGIC (Including Matrix Gen & SVG Drawing) -->
+    <script>
+        // 1. Theme Toggle (Untouched logic)
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const htmlBlock = document.documentElement;
+
+        if (localStorage.getItem('qtv-edu-theme') === 'light') {
+            htmlBlock.classList.remove('dark');
+            darkIcon.classList.remove('hidden');
+            lightIcon.classList.add('hidden');
+        } else {
+            htmlBlock.classList.add('dark');
+            darkIcon.classList.add('hidden');
+            lightIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            darkIcon.classList.toggle('hidden');
+            lightIcon.classList.toggle('hidden');
+
+            const isDark = htmlBlock.classList.contains('dark');
+            if (isDark) {
+                htmlBlock.classList.remove('dark');
+                localStorage.setItem('qtv-edu-theme', 'light');
+            } else {
+                htmlBlock.classList.add('dark');
+                localStorage.setItem('qtv-edu-theme', 'dark');
+            }
+            document.dispatchEvent(new CustomEvent('themeChanged', { detail: { isDark: !isDark } }));
+        });
+
+        // 2. High Performance 3D Card Hover Logic
+        const cards = document.querySelectorAll('.tilt-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+
+        // 3. WhatsApp Dispatch Logic (Untouched)
+        function sendToWhatsApp(e) {
+            e.preventDefault();
+            const name = document.getElementById('waName').value || 'Confidential Source';
+            const institution = document.getElementById('waInstitution').value;
+            const issueSelect = document.getElementById('waIssue');
+            const issue = issueSelect.options[issueSelect.selectedIndex].text;
+            const message = document.getElementById('waMessage').value;
+
+            const waText = `*Editorial Tip Desk: Q TV Education News*%0A%0A*Source:* ${name}%0A*Location/Inst:* ${institution}%0A*Classification:* ${issue}%0A*Intel:* ${message}`;
+            const whatsappURL = `https://wa.me/919494943556?text=${waText}`;
+
+            window.open(whatsappURL, '_blank');
+            document.getElementById('waMessage').value = ''; 
+        }
+
+        // Generate dots for Exam Matrix
+        const matrixContainer = document.getElementById('exam-matrix');
+        if (matrixContainer) {
+            for(let i=0; i<36; i++){
+                let dot = document.createElement('div');
+                dot.className = 'exam-node';
+                matrixContainer.appendChild(dot);
+            }
+            // Randomly blink dots
+            setInterval(() => {
+                const nodes = document.querySelectorAll('.exam-node');
+                const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+                randomNode.classList.add('active');
+                setTimeout(() => randomNode.classList.remove('active'), 1000);
+            }, 300);
+        }
+
+        // 4. Smooth Scroll & GSAP
+        const lenis = new Lenis({ duration: 0.8, smooth: true });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Hero
+        gsap.to(".gsap-hero", { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.2 });
+        
+        // General fade-ups
+        const fadeElements = document.querySelectorAll('.gsap-fade-up');
+        fadeElements.forEach((el) => {
+            gsap.from(el, {
+                scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
+                y: 40, opacity: 0, duration: 1, ease: "power3.out"
+            });
+        });
+
+        // Specific Scrollytelling for Sectors
+        const sectorTexts = document.querySelectorAll('.gsap-sector-text');
+        sectorTexts.forEach((text) => {
+            gsap.from(text, {
+                scrollTrigger: { trigger: text, start: "top 80%", toggleActions: "play none none reverse" },
+                x: -50, opacity: 0, duration: 1, ease: "power3.out"
+            });
+        });
+
+        const sectorVisuals = document.querySelectorAll('.gsap-sector-visual');
+        sectorVisuals.forEach((vis) => {
+            gsap.from(vis, {
+                scrollTrigger: { trigger: vis, start: "top 80%", toggleActions: "play none none reverse" },
+                scale: 0.9, opacity: 0, duration: 1, ease: "power3.out"
+            });
+        });
+
+        // SVG Path Animations
+        const paths = document.querySelectorAll('.path-draw');
+        paths.forEach((path) => {
+            gsap.to(path, {
+                scrollTrigger: { trigger: path, start: "top 80%", toggleActions: "play none none reverse" },
+                strokeDashoffset: 0, duration: 2, ease: "power2.inOut"
+            });
+        });
+        
+        const stats = document.querySelectorAll('.gsap-stat');
+        gsap.from(stats, {
+            scrollTrigger: { trigger: stats[0], start: "top 85%" },
+            y: 30, opacity: 0, stagger: 0.2, duration: 0.8, ease: "power2.out"
+        });
+    </script>
+
+    <!-- THREE.JS CORE (Untouched, exactly as provided) -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        const container = document.getElementById('hero-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 40;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); 
+        container.appendChild(renderer.domElement);
+
+        const geometry = new THREE.IcosahedronGeometry(18, 1);
+        const edges = new THREE.EdgesGeometry(geometry);
+        
+        const isCurrentlyDark = document.documentElement.classList.contains('dark');
+
+        const material = new THREE.LineBasicMaterial({ 
+            color: 0x00008B, 
+            linewidth: 1,
+            transparent: true,
+            opacity: isCurrentlyDark ? 0.8 : 0.3
+        });
+
+        const core = new THREE.LineSegments(edges, material);
+        scene.add(core);
+
+        const particleGeo = new THREE.BufferGeometry();
+        const particleCount = 800;
+        const posArray = new Float32Array(particleCount * 3);
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 80;
+        }
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particleMat = new THREE.PointsMaterial({
+            size: 0.3,
+            color: 0xd91e27, 
+            transparent: true,
+            opacity: isCurrentlyDark ? 0.8 : 0.4
+        });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        scene.add(particles);
+
+        document.addEventListener('themeChanged', (e) => {
+            material.opacity = e.detail.isDark ? 0.8 : 0.3;
+            particleMat.opacity = e.detail.isDark ? 0.8 : 0.4;
+        });
+
+        let mouseX = 0; let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.03;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.03;
+        });
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            core.rotation.y += 0.001;
+            core.rotation.x += 0.002;
+            particles.rotation.y -= 0.002;
+            
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            renderer.render(scene, camera);
+        }
+        animate3D();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

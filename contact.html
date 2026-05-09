@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QTV Network | Contact The Nerve Center</title>
+    
+    <!-- Premium Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS (CDN & Config) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Clash Display', 'sans-serif'],
+                    },
+                    colors: {
+                        qtvDarkBlue: '#00008B',
+                        qtvNavy: '#050b14',
+                        qtvRed: '#d91e27',
+                        qtvCyan: '#38bdf8',
+                        qtvLight: '#ffffff',
+                        qtvGray: '#f8fafc',
+                        darkSurface: '#0a1128',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Core External Libraries -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+
+    <!-- Three.js Import Map -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+
+    <!-- Master CSS -->
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-qtvGray text-qtvNavy dark:bg-qtvNavy dark:text-qtvLight antialiased selection:bg-qtvDarkBlue selection:text-white">
+
+    <!-- 1. NAVIGATION -->
+    <nav class="fixed w-full z-50 glass-nav px-6 py-4">
+        <div class="max-w-[90rem] mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center tracking-tighter ">
+               
+            <img src="./assets/qtvmedia.png" alt="QTV Logo" class="w-20 h-20 object-contain ">
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 font-semibold text-sm">
+                <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-qtvDarkBlue dark:hover:text-qtvCyan transition-colors">Network Hub</a>
+                <a href="qtv-media.html" class="text-gray-600 dark:text-gray-400 hover:text-qtvDarkBlue dark:hover:text-qtvCyan transition-colors">Media</a>
+                <a href="qtv-education.html" class="text-gray-600 dark:text-gray-400 hover:text-qtvDarkBlue dark:hover:text-qtvCyan transition-colors">Education</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="p-2.5 rounded-full bg-gray-200 dark:bg-darkSurface text-gray-800 dark:text-yellow-400 hover:scale-110 transition-transform shadow-md border border-transparent dark:border-white/10">
+                    <i class="fas fa-adjust"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. CINEMATIC HERO -->
+    <section class="relative pt-40 pb-20 px-5 md:px-6 w-full flex flex-col items-center justify-center text-center overflow-hidden border-b border-gray-200 dark:border-white/5">
+        <div id="hero-canvas" class="opacity-60 dark:opacity-100 transition-opacity duration-700"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-white/80 via-transparent to-white dark:from-qtvNavy/90 dark:via-transparent dark:to-qtvNavy z-10 pointer-events-none"></div>
+        
+        <div class="relative z-20 w-full max-w-4xl mx-auto">
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-gray-300 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md mb-6 gsap-hero opacity-0 translate-y-8">
+                <span class="w-2 h-2 rounded-full bg-qtvCyan animate-pulse"></span>
+                <span class="text-[10px] md:text-xs font-bold tracking-widest uppercase text-qtvNavy dark:text-gray-300">Srikakulam Nerve Center</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-7xl font-display font-bold tracking-tight leading-[1.05] mb-4 md:mb-6 gsap-hero opacity-0 translate-y-8 text-qtvNavy dark:text-white">
+                Establish <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-qtvDarkBlue to-qtvCyan">Connection.</span>
+            </h1>
+            
+            <p class="text-sm md:text-lg text-gray-600 dark:text-gray-400 font-medium max-w-2xl mx-auto mb-12 gsap-hero opacity-0 translate-y-8 leading-relaxed">
+                Whether you have a breaking news tip, a corporate inquiry, or need broadcast support, our central dispatch is monitoring 24/7.
+            </p>
+        </div>
+    </section>
+
+    <!-- 3. CONTACT INFRASTRUCTURE (Based on Uploaded Image) -->
+    <section class="py-16 md:py-24 px-5 md:px-6 relative z-20">
+        <div class="max-w-[90rem] mx-auto grid lg:grid-cols-12 gap-10 md:gap-16">
+            
+            <!-- Information Panel -->
+            <div class="lg:col-span-5 space-y-6 md:space-y-8 gsap-fade-up">
+                
+                <!-- Headquarters Data from Image -->
+                <div class="bg-white dark:bg-darkSurface p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-gray-200 dark:border-white/10 shadow-xl">
+                    <div class="w-12 h-12 rounded-full bg-qtvDarkBlue/10 dark:bg-qtvCyan/10 flex items-center justify-center text-qtvDarkBlue dark:text-qtvCyan mb-4 md:mb-6 text-xl">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4 class="text-xl md:text-2xl font-bold text-qtvNavy dark:text-white mb-3">QTV Media Headquarters</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed">
+                        Nava Bharat Junction, 101-17/A,<br>
+                        Bye-Pass, Kushalapuram,<br>
+                        Srikakulam, Andhra Pradesh 532410
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Plus Code:</span>
+                        <span class="ml-2 text-sm font-medium text-qtvNavy dark:text-white">7VV7+HH Srikakulam</span>
+                    </div>
+                </div>
+
+                <!-- Direct Line Data from Image -->
+                <div class="bg-white dark:bg-darkSurface p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-gray-200 dark:border-white/10 shadow-xl">
+                    <div class="w-12 h-12 rounded-full bg-qtvRed/10 flex items-center justify-center text-qtvRed mb-4 md:mb-6 text-xl">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h4 class="text-xl md:text-2xl font-bold text-qtvNavy dark:text-white mb-2">Direct Dispatch Line</h4>
+                    <p class="text-2xl md:text-3xl font-display font-bold text-qtvDarkBlue dark:text-white mb-3 tracking-wide">
+                        094949 43556
+                    </p>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-green-600 dark:text-green-400">Open 24 Hours</span>
+                    </div>
+                </div>
+
+                <!-- Digital Inquiry -->
+                <div class="bg-white dark:bg-darkSurface p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-gray-200 dark:border-white/10 shadow-xl flex items-center justify-between group hover:border-qtvCyan/50 transition-colors cursor-pointer">
+                    <div>
+                        <h4 class="text-lg md:text-xl font-bold text-qtvNavy dark:text-white mb-1">Corporate Email</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">dispatch@qtvmedia.in</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-400 group-hover:text-qtvCyan transition-colors transform group-hover:translate-x-2"></i>
+                </div>
+
+            </div>
+
+            <!-- Secure Dispatch Form -->
+            <div class="lg:col-span-7 perspective-container gsap-fade-up delay-100">
+                <div class="tilt-card bg-qtvGray dark:bg-darkSurface p-6 md:p-12 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl border border-gray-200 dark:border-white/10 relative overflow-hidden h-full flex flex-col justify-center">
+                    
+                    <div class="mb-8 relative z-10">
+                        <h3 class="text-2xl md:text-4xl font-display font-bold text-qtvNavy dark:text-white mb-2">Secure Digital Form</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Submitted data is encrypted end-to-end via TLS 1.3 before reaching our Srikakulam servers.</p>
+                    </div>
+
+                    <form class="space-y-4 md:space-y-6 relative z-10" onsubmit="sendToWhatsApp(event)">
+                        <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+                            <input type="text" id="waName" placeholder="Full Name / Organization" required class="premium-input text-sm md:text-base">
+                            <input type="text" id="waLocation" placeholder="Location / City" required class="premium-input text-sm md:text-base">
+                        </div>
+                        
+                        <div class="relative">
+                            <select id="waIssue" required class="premium-input appearance-none cursor-pointer text-sm md:text-base">
+                                <option value="" disabled selected class="text-gray-500">Select Dispatch Division</option>
+                                <option value="news">QTV Media - Breaking News Tip</option>
+                                <option value="edu">QTV Education - Campus Report</option>
+                                <option value="bhakti">QTV Bhakti - Temple Broadcasting</option>
+                                <option value="corp">Zigzex IT - Corporate Partnership</option>
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                        </div>
+
+                        <textarea id="waMessage" rows="5" placeholder="Enter your detailed message or transmission..." required class="premium-input resize-none text-sm md:text-base"></textarea>
+                        
+                        <button type="submit" class="w-full bg-qtvDarkBlue dark:bg-qtvCyan hover:bg-blue-800 dark:hover:bg-blue-400 text-white dark:text-qtvNavy font-bold py-4 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-3 text-sm md:text-lg mt-4">
+                            Initiate Secure Transfer <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white dark:bg-qtvNavy text-qtvNavy dark:text-white pt-16 pb-10 px-6 border-t border-gray-200 dark:border-white/5 transition-colors">
+        <div class="max-w-[90rem] mx-auto text-center">
+            <div class="flex items-center justify-center tracking-tighter mb-4">
+                <img src="./assets/qtvmedia.png" alt="QTV Logo" class="w-20 h-25 object-contain">
+                <!-- <span class="text-2xl font-display font-bold text-qtvNavy dark:text-white ml-2">QTV Network</span> -->
+            </div>
+            <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-widest">QTV Network • Srikakulam Headquarters &copy; 2026</p>
+            <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-widest">Zigzex IT Services Private Limited &copy; 2026 </p>
+            <span style="color: #050b14;">By Indra</span>
+        </div>
+    </footer>
+
+    <!-- Master App Script (Handles Theme, Smooth Scroll, and GSAP) -->
+    <script src="assets/app.js"></script>
+
+    <!-- Interactive 3D Node Background Specific to Contact Page -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        const container = document.getElementById('hero-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 50;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); 
+        container.appendChild(renderer.domElement);
+
+        const isCurrentlyDark = document.documentElement.classList.contains('dark');
+
+        // Create a connecting nodes geometry (representing a network)
+        const geometry = new THREE.BufferGeometry();
+        const particlesCount = 300;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 100;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const material = new THREE.PointsMaterial({
+            size: 0.3,
+            color: isCurrentlyDark ? 0x38bdf8 : 0x00008B, // Cyan or Navy
+            transparent: true,
+            opacity: 0.8,
+            blending: isCurrentlyDark ? THREE.AdditiveBlending : THREE.NormalBlending
+        });
+
+        const particlesMesh = new THREE.Points(geometry, material);
+        scene.add(particlesMesh);
+
+        // Lines connecting the nodes
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: isCurrentlyDark ? 0x38bdf8 : 0x00008B,
+            transparent: true,
+            opacity: 0.15
+        });
+        const lineMesh = new THREE.LineSegments(geometry, lineMaterial);
+        scene.add(lineMesh);
+
+        document.addEventListener('themeChanged', (e) => {
+            const newColor = e.detail.isDark ? 0x38bdf8 : 0x00008B;
+            material.color.setHex(newColor);
+            lineMaterial.color.setHex(newColor);
+            material.blending = e.detail.isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        });
+
+        let mouseX = 0; let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.05;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.05;
+        });
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            
+            // Slow rotation representing active monitoring
+            particlesMesh.rotation.y += 0.001;
+            lineMesh.rotation.y += 0.001;
+            particlesMesh.rotation.x += 0.0005;
+            lineMesh.rotation.x += 0.0005;
+
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            
+            renderer.render(scene, camera);
+        }
+        animate3D();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

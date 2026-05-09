@@ -1,0 +1,73 @@
+/* assets/style.css */
+
+body { 
+    overflow-x: hidden; 
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Base Themes (Can be overridden by specific page classes) */
+body.light-theme-default { background-color: #f8fafc; color: #050b14; }
+body.dark-theme-default { background-color: #050b14; color: #ffffff; }
+
+/* Ultra-Premium Glass Nav */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.4s ease;
+}
+.dark .glass-nav {
+    background: rgba(5, 11, 20, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 3D Canvas & Backgrounds */
+#hero-canvas { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.bg-img-overlay { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; }
+
+/* Hardware Accelerated 3D Tilt Cards */
+.perspective-container { perspective: 1200px; }
+.tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+    position: relative;
+}
+.tilt-card::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit;
+    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.6) 25%, transparent 30%);
+    opacity: 0; transition: opacity 0.3s ease, transform 0.1s ease-out;
+    pointer-events: none; z-index: 10;
+}
+.tilt-card:hover::after { opacity: 1; }
+.dark .tilt-card::after { background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.15) 25%, transparent 30%); }
+
+/* Ticker Mask */
+.ticker-mask {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+/* Smooth Hide Scrollbar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Custom Gradients */
+.text-gradient-brand {
+    background: linear-gradient(135deg, #00008B 0%, #d91e27 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.dark .text-gradient-brand {
+    background: linear-gradient(135deg, #ffffff 0%, #d91e27 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Form Inputs */
+.premium-input {
+    width: 100%; padding: 1.2rem 1.5rem;
+    background: rgba(255,255,255,0.5); border: 1px solid rgba(0,0,139,0.1);
+    border-radius: 12px; transition: all 0.3s ease; outline: none;
+}
+.dark .premium-input { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: white; }
+.premium-input:focus { border-color: #d91e27; box-shadow: 0 0 0 4px rgba(217,30,39,0.1); }
