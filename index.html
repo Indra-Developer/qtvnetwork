@@ -7,6 +7,7 @@
     
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./assets/favicon.jpg">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -106,42 +107,27 @@
 </head>
 <body class="bg-qtvGray text-qtvNavy dark:bg-qtvNavy dark:text-qtvLight antialiased selection:bg-qtvDarkBlue selection:text-white">
 
-    <div id="qtv-loader" class="fixed inset-0 z-[99999] bg-[#050b14] flex flex-col justify-center items-center transition-opacity duration-1000">
-        <div class="relative flex justify-center items-center w-32 h-32">
-            <div class="absolute inset-0 rounded-full border-4 border-white/5 border-t-[#00ccff] animate-spin"></div>
-            
-            <img src="./assets/qtvmedia.png" alt="QTV Logo" class="w-20 h-20 object-contain animate-pulse">
-        </div>
-        <div class="mt-6 text-[#00ccff] font-display tracking-[0.3em] text-xs font-bold uppercase animate-pulse">
-            Loading
-        </div>
-    </div>
 
-    <script>
-        // Remove Loader
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('qtv-loader');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                loader.style.visibility = 'hidden';
-                setTimeout(() => loader.remove(), 500);
-            }, 500); 
-        });
-    </script>
+
 
     <nav class="fixed w-full z-50 glass-nav px-6 py-4">
         <div class="max-w-[90rem] mx-auto flex justify-between items-center relative">
             
-            <a href="index.html" class="flex items-center tracking-tighter bg-qtvNavy px-3 py-1 rounded-lg shadow-md border border-white/10 group">
+            <a href="index.html" class="flex items-center tracking-tighter bg-qtvNavy ">
                 <img src="./assets/qtvmedia.png" alt="" style="height: 90px;width: auto;">
             </a>
 
             <div class="hidden md:flex items-center gap-8 font-semibold text-sm">
-                <a href="qtv-media.html" class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Media</a>
-                <a href="qtv-education.html" class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Education</a>
-                <a href="qtv-bhakti.html" class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Bhakti</a>
-                <a href="qtv-health.html" class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Health</a>
-                <a href="contact.html" class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Contact</a>
+                <a href="./qtv-media/qtv-media.html"
+                    class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Media</a>
+                <a href="./qtv-education/qtv-education.html"
+                    class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Education</a>
+                <a href="./qtv-bhakthi/qtv-bhakthi.html"
+                    class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Bhakthi</a>
+                <a href="./qtv-health/qtv-health.html"
+                    class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Health</a>
+                <a href="./contact.html"
+                    class="text-qtvNavy dark:text-white hover:text-qtvCyan dark:hover:text-qtvCyan transition-colors">Contact</a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -150,9 +136,12 @@
                     <svg id="theme-icon-light" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button> -->
 
-                <button class="bg-qtvDarkBlue text-white px-7 py-2.5 rounded-full text-sm font-semibold hover:bg-qtvCyan transition-all shadow-[0_0_15px_rgba(0,0,139,0.4)] hover:shadow-[0_0_25px_rgba(56,189,248,0.6)] hover:-translate-y-0.5">
+            <a href="https://www.qtvmedia.com/" target="_blank" rel="noopener noreferrer">
+                <button
+                    class="bg-qtvDarkBlue text-white px-7 py-2.5 rounded-full text-sm font-semibold hover:bg-qtvCyan transition-all shadow-[0_0_15px_rgba(0,0,139,0.4)] hover:shadow-[0_0_25px_rgba(56,189,248,0.6)] hover:-translate-y-0.5">
                     Watch Live
                 </button>
+            </a>
 
                 <!-- Hamburger Menu Button (Mobile Only) -->
                 <button id="mobile-menu-btn" class="md:hidden p-2 text-qtvNavy dark:text-white focus:outline-none hover:text-qtvCyan transition-colors">
@@ -164,11 +153,15 @@
         <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-qtvGray/95 dark:bg-qtvNavy/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 shadow-lg py-6 px-6 transition-all duration-300">
             <div class="flex flex-col gap-6 font-semibold text-lg text-center">
-                <a href="qtv-media.html" class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Media</a>
-                <a href="qtv-education.html" class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Education</a>
-                <a href="qtv-bhakti.html" class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Bhakti</a>
-                <a href="qtv-health.html" class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Health</a>
-                <a href="contact.html" class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Contact</a>
+                <a href="./qtv-media/qtv-media.html"
+                    class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Media</a>
+                <a href="./qtv-education/qtv-education.html"
+                    class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Education</a>
+                <a href="./qtv-bhakthi/qtv-bhakthi.html"
+                    class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Bhakthi</a>
+                <a href="./qtv-health/qtv-health.html"
+                    class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Health</a>
+                <a href="./contact.html" class="block text-qtvNavy dark:text-white hover:text-qtvCyan transition-colors">Contact</a>
             </div>
         </div>
     </nav>
@@ -267,7 +260,8 @@
                     </div>
                 </a>
 
-                <a href="./qtv-bhakti/qtv-bhakti.html" class="tilt-card bg-white dark:bg-darkSurface p-2 md:p-3 rounded-[1.5rem] md:rounded-[2rem] cursor-pointer gsap-fade-up border border-gray-200 dark:border-white/10 shadow-xl group block">
+                <a href="./qtv-bhakthi/qtv-bhakthi.html"
+                    class="tilt-card bg-white dark:bg-darkSurface p-2 md:p-3 rounded-[1.5rem] md:rounded-[2rem] cursor-pointer gsap-fade-up border border-gray-200 dark:border-white/10 shadow-xl group block">
                     <!-- CHANGED: md:h-64 lg:h-72 is now md:h-48 lg:h-52 -->
                     <div class="relative h-36 md:h-48 lg:h-52 rounded-xl md:rounded-[1.5rem] overflow-hidden mb-3 md:mb-6 transform translate-z-10 bg-transparent">
                         <img src="./assets/Bhakti.PNG" style="object-fit: contain; border-radius: 10px;"
@@ -275,7 +269,9 @@
                     </div>
                     <div class="px-2 pb-3 md:px-6 md:pb-6 transform translate-z-20">
                         <span class="text-orange-500 font-bold text-[10px] md:text-xs tracking-wider uppercase mb-1 md:mb-2 block">Spiritual</span>
-                        <h3 class="text-lg md:text-3xl font-display font-bold mb-1 md:mb-2 text-qtvNavy dark:text-white group-hover:text-orange-500 transition-colors">QTV Bhakti</h3>
+                        <h3
+                            class="text-lg md:text-3xl font-display font-bold mb-1 md:mb-2 text-qtvNavy dark:text-white group-hover:text-orange-500 transition-colors">
+                            QTV Bhakthi</h3>
                         <p class="text-gray-600 dark:text-gray-400 text-[10px] md:text-sm leading-tight">Experience divine tranquility with live temple streams and mantras.</p>
                     </div>
                 </a>
@@ -345,7 +341,7 @@
                     <div class="flex text-yellow-500 dark:text-yellow-400 mb-4 transform translate-z-10">★★★★★</div>
                     <p class="text-gray-800 dark:text-gray-300 mb-6 font-medium transform translate-z-10">"The education portal is phenomenal. Clean interface, no distractions, and top-tier instructors. Worth every penny."</p>
                     <div class="transform translate-z-10">
-                        <h5 class="font-bold text-qtvNavy dark:text-white">David Chen</h5>
+                        <h5 class="font-bold text-qtvNavy dark:text-white">Indra</h5>
                         <p class="text-xs text-gray-600 dark:text-gray-400">Tech Student</p>
                     </div>
                 </div>
@@ -362,13 +358,15 @@
                 <p class="text-gray-600 dark:text-gray-400 max-w-sm mb-6 leading-relaxed">
                     Setting a new global standard for digital broadcasting. Built with precision by Zigzex IT Services.
                 </p>
+                
             </div>
             <div>
                 <h4 class="font-display font-bold text-lg mb-6">QTV Network</h4>
                 <ul class="space-y-4 text-gray-600 dark:text-gray-400 text-sm">
                    
                     <li><a href="./qtv-media/qtv-media.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">QTV MEDIA</a></li>
-                    <li><a href="./qtv-bhakti/qtv-bhakti.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">QTV Bhakti</a></li>
+                    <li><a href="./qtv-bhakthi/qtv-bhakthi.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">QTV
+                            Bhakthi</a></li>
                     <li><a href="./qtv-education/qtv-education.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">Q TV Education</a></li>
                     <li><a href="./qtv-health/qtv-health.html" class="hover:text-qtvDarkBlue dark:hover:text-white transition">Q TV Health</a></li>
                 </ul>
